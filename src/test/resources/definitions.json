@@ -48,16 +48,6 @@
       }
     },
     {
-      "name": "Action.Printer",
-      "vhost": "/",
-      "durable": true,
-      "auto_delete": false,
-      "arguments": {
-        "x-dead-letter-exchange": "delayedRedeliveryExchange",
-        "x-dead-letter-routing-key": "Action.Printer"
-      }
-    },
-    {
       "name": "action.fulfilment",
       "vhost": "/",
       "durable": true,
@@ -65,16 +55,6 @@
       "arguments": {
         "x-dead-letter-exchange": "delayedRedeliveryExchange",
         "x-dead-letter-routing-key": "action.fulfilment"
-      }
-    },
-    {
-      "name": "Action.Field",
-      "vhost": "/",
-      "durable": true,
-      "auto_delete": false,
-      "arguments": {
-        "x-dead-letter-exchange": "delayedRedeliveryExchange",
-        "x-dead-letter-routing-key": "Action.Field"
       }
     },
     {
