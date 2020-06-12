@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:15432/postgres
+
+  rabbitmq:
+    port: 35672
+
+queueconfig:
+  events-exchange: events
+  action-case-queue: action.events
