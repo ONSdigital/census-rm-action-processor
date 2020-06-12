@@ -17,12 +17,12 @@ import uk.gov.ons.census.action.model.dto.FulfilmentRequestDTO;
 import uk.gov.ons.census.action.model.entity.ActionType;
 import uk.gov.ons.census.action.model.entity.Case;
 import uk.gov.ons.census.action.model.entity.FulfilmentToProcess;
-import uk.gov.ons.census.action.model.repository.FulfilmentToSendRepository;
+import uk.gov.ons.census.action.model.repository.FulfilmentToProcessRepository;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FulfillmentRequestServiceTest {
   @Mock RabbitTemplate rabbitTemplate;
-  @Mock FulfilmentToSendRepository fulfilmentToSendRepository;
+  @Mock FulfilmentToProcessRepository fulfilmentToProcessRepository;
 
   @InjectMocks FulfilmentRequestService underTest;
 
@@ -64,7 +64,7 @@ public class FulfillmentRequestServiceTest {
 
     ArgumentCaptor<FulfilmentToProcess> fulfilmentToSendArgumentCaptor =
         ArgumentCaptor.forClass(FulfilmentToProcess.class);
-    verify(fulfilmentToSendRepository).saveAndFlush(fulfilmentToSendArgumentCaptor.capture());
+    verify(fulfilmentToProcessRepository).saveAndFlush(fulfilmentToSendArgumentCaptor.capture());
 
     FulfilmentToProcess actualFulfilmentToProcess = fulfilmentToSendArgumentCaptor.getValue();
     assertThat(actualFulfilmentToProcess)

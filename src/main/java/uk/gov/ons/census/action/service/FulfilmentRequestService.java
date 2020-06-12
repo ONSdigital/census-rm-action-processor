@@ -13,12 +13,12 @@ import uk.gov.ons.census.action.model.dto.FulfilmentRequestDTO;
 import uk.gov.ons.census.action.model.entity.ActionType;
 import uk.gov.ons.census.action.model.entity.Case;
 import uk.gov.ons.census.action.model.entity.FulfilmentToProcess;
-import uk.gov.ons.census.action.model.repository.FulfilmentToSendRepository;
+import uk.gov.ons.census.action.model.repository.FulfilmentToProcessRepository;
 
 @Service
 public class FulfilmentRequestService {
   private static final Logger log = LoggerFactory.getLogger(FulfilmentRequestReceiver.class);
-  private final FulfilmentToSendRepository fulfilmentToSendRepository;
+  private final FulfilmentToProcessRepository fulfilmentToProcessRepository;
   private static final Set<String> paperQuestionnaireFulfilmentCodes =
       Set.of(
           "P_OR_H1",
@@ -34,8 +34,8 @@ public class FulfilmentRequestService {
           "P_OR_I2W",
           "P_OR_I4");
 
-  public FulfilmentRequestService(FulfilmentToSendRepository fulfilmentToSendRepository) {
-    this.fulfilmentToSendRepository = fulfilmentToSendRepository;
+  public FulfilmentRequestService(FulfilmentToProcessRepository fulfilmentToProcessRepository) {
+    this.fulfilmentToProcessRepository = fulfilmentToProcessRepository;
   }
 
   public void processEvent(
@@ -229,6 +229,6 @@ public class FulfilmentRequestService {
     fulfilmentToProcess.setSurname(fulfilmentRequest.getContact().getSurname());
     fulfilmentToProcess.setFulfilmentCode(fulfilmentRequest.getFulfilmentCode());
     fulfilmentToProcess.setActionType(actionType);
-    fulfilmentToSendRepository.saveAndFlush(fulfilmentToProcess);
+    fulfilmentToProcessRepository.saveAndFlush(fulfilmentToProcess);
   }
 }

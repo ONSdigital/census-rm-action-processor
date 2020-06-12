@@ -19,7 +19,7 @@ import uk.gov.ons.census.action.model.dto.*;
 import uk.gov.ons.census.action.model.entity.Case;
 import uk.gov.ons.census.action.model.entity.FulfilmentToProcess;
 import uk.gov.ons.census.action.model.repository.CaseRepository;
-import uk.gov.ons.census.action.model.repository.FulfilmentToSendRepository;
+import uk.gov.ons.census.action.model.repository.FulfilmentToProcessRepository;
 
 @ContextConfiguration
 @SpringBootTest
@@ -39,7 +39,7 @@ public class FulfilmentRequestReceiverIT {
 
   @Autowired private CaseRepository caseRepository;
 
-  @Autowired private FulfilmentToSendRepository fulfilmentToSendRepository;
+  @Autowired private FulfilmentToProcessRepository fulfilmentToProcessRepository;
 
   private EasyRandom easyRandom = new EasyRandom();
 
@@ -47,7 +47,7 @@ public class FulfilmentRequestReceiverIT {
   @Transactional
   public void setUp() {
     rabbitQueueHelper.purgeQueue(actionFulfilmentQueue);
-    fulfilmentToSendRepository.deleteAll();
+    fulfilmentToProcessRepository.deleteAll();
   }
 
   @Test
@@ -63,7 +63,7 @@ public class FulfilmentRequestReceiverIT {
         eventsExchange, EVENTS_FULFILMENT_REQUEST_BINDING, actionFulfilmentEvent);
     Thread.sleep(2000);
 
-    List<FulfilmentToProcess> fulfilmentToProcess = fulfilmentToSendRepository.findAll();
+    List<FulfilmentToProcess> fulfilmentToProcess = fulfilmentToProcessRepository.findAll();
 
     FulfilmentToProcess actualFulfilmentToProcess = fulfilmentToProcess.get(0);
 
@@ -85,7 +85,7 @@ public class FulfilmentRequestReceiverIT {
     rabbitQueueHelper.sendMessage(
         eventsExchange, EVENTS_FULFILMENT_REQUEST_BINDING, actionFulfilmentEvent);
 
-    assertThat(fulfilmentToSendRepository.findAll().size()).isEqualTo(0);
+    assertThat(fulfilmentToProcessRepository.findAll().size()).isEqualTo(0);
   }
 
   private void checkAddressFieldsMatch(
