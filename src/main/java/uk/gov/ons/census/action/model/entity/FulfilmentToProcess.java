@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Entity
 @Data
-public class FulfilmentToSend {
+public class FulfilmentToProcess {
 
   @Id
   @Column(columnDefinition = "serial")

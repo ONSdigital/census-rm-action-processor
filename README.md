@@ -5,7 +5,7 @@
 # Overview
 This service processes all the case & uac-qid messages which are emitted from Case Processor, to maintain a replica of the data, for performance reasons during action rule processing, which will affect many millions of cases.
 
-This service handles ad hoc fulfilment requests. These are real time requests for actions on a census case e.g. mailing out a questionnaire which was requested over the phone. These requests are queued in a `fulfilment_to_send` table.
+This service handles ad hoc fulfilment requests. These are real time requests for actions on a census case e.g. mailing out a questionnaire which was requested over the phone. These requests are queued in a `fulfilment_to_process` table.
 
 The Action Processor is implemented with Java 11 & Spring Integration, it is event driven listening to rabbitmq and persisting data to a Postgres SQL DB.
 

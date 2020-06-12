@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import uk.gov.ons.census.action.model.dto.FulfilmentRequestDTO;
 import uk.gov.ons.census.action.model.entity.ActionType;
 import uk.gov.ons.census.action.model.entity.Case;
-import uk.gov.ons.census.action.model.entity.FulfilmentToSend;
+import uk.gov.ons.census.action.model.entity.FulfilmentToProcess;
 import uk.gov.ons.census.action.model.repository.FulfilmentToSendRepository;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -62,20 +62,20 @@ public class FulfillmentRequestServiceTest {
 
     underTest.processEvent(fulfilmentRequestDTO, caze, ActionType.P_OR_IX);
 
-    ArgumentCaptor<FulfilmentToSend> fulfilmentToSendArgumentCaptor =
-        ArgumentCaptor.forClass(FulfilmentToSend.class);
+    ArgumentCaptor<FulfilmentToProcess> fulfilmentToSendArgumentCaptor =
+        ArgumentCaptor.forClass(FulfilmentToProcess.class);
     verify(fulfilmentToSendRepository).saveAndFlush(fulfilmentToSendArgumentCaptor.capture());
 
-    FulfilmentToSend actualFulfilmentToSend = fulfilmentToSendArgumentCaptor.getValue();
-    assertThat(actualFulfilmentToSend)
+    FulfilmentToProcess actualFulfilmentToProcess = fulfilmentToSendArgumentCaptor.getValue();
+    assertThat(actualFulfilmentToProcess)
         .isEqualToComparingOnlyGivenFields(
             caze, "addressLine1", "addressLine2", "addressLine3", "postcode", "townName");
-    assertThat(actualFulfilmentToSend)
+    assertThat(actualFulfilmentToProcess)
         .isEqualToComparingOnlyGivenFields(
             fulfilmentRequestDTO.getContact(), "title", "forename", "surname");
     assertEquals(
-        fulfilmentRequestDTO.getFulfilmentCode(), actualFulfilmentToSend.getFulfilmentCode());
-    assertEquals(ActionType.P_OR_IX, actualFulfilmentToSend.getActionType());
+        fulfilmentRequestDTO.getFulfilmentCode(), actualFulfilmentToProcess.getFulfilmentCode());
+    assertEquals(ActionType.P_OR_IX, actualFulfilmentToProcess.getActionType());
   }
 
   @Test(expected = RuntimeException.class)

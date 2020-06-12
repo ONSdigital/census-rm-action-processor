@@ -17,7 +17,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.ons.census.action.model.dto.*;
 import uk.gov.ons.census.action.model.entity.Case;
-import uk.gov.ons.census.action.model.entity.FulfilmentToSend;
+import uk.gov.ons.census.action.model.entity.FulfilmentToProcess;
 import uk.gov.ons.census.action.model.repository.CaseRepository;
 import uk.gov.ons.census.action.model.repository.FulfilmentToSendRepository;
 
@@ -63,14 +63,14 @@ public class FulfilmentRequestReceiverIT {
         eventsExchange, EVENTS_FULFILMENT_REQUEST_BINDING, actionFulfilmentEvent);
     Thread.sleep(2000);
 
-    List<FulfilmentToSend> fulfilmentToSend = fulfilmentToSendRepository.findAll();
+    List<FulfilmentToProcess> fulfilmentToProcess = fulfilmentToSendRepository.findAll();
 
-    FulfilmentToSend actualFulfilmentToSend = fulfilmentToSend.get(0);
+    FulfilmentToProcess actualFulfilmentToProcess = fulfilmentToProcess.get(0);
 
     checkAddressFieldsMatch(
         fulfillmentCase,
         actionFulfilmentEvent.getPayload().getFulfilmentRequest().getContact(),
-        actualFulfilmentToSend);
+        actualFulfilmentToProcess);
   }
 
   @Test
@@ -89,13 +89,13 @@ public class FulfilmentRequestReceiverIT {
   }
 
   private void checkAddressFieldsMatch(
-      Case expectedCase, Contact expectedContact, FulfilmentToSend actualFulfilmentToSend) {
-    assertThat(actualFulfilmentToSend)
+      Case expectedCase, Contact expectedContact, FulfilmentToProcess actualFulfilmentToProcess) {
+    assertThat(actualFulfilmentToProcess)
         .isEqualToComparingOnlyGivenFields(
             expectedCase, "addressLine1", "addressLine2", "addressLine3", "postcode", "townName");
-    assertThat(actualFulfilmentToSend)
+    assertThat(actualFulfilmentToProcess)
         .isEqualToComparingOnlyGivenFields(expectedContact, "title", "forename", "surname");
-    assertThat(actualFulfilmentToSend.getCaze()).isEqualTo(expectedCase);
+    assertThat(actualFulfilmentToProcess.getCaze()).isEqualTo(expectedCase);
   }
 
   private ResponseManagementEvent getResponseManagementEvent(UUID caseId, String fulfilmentCode) {

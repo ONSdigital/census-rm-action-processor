@@ -12,7 +12,7 @@ import uk.gov.ons.census.action.messaging.FulfilmentRequestReceiver;
 import uk.gov.ons.census.action.model.dto.FulfilmentRequestDTO;
 import uk.gov.ons.census.action.model.entity.ActionType;
 import uk.gov.ons.census.action.model.entity.Case;
-import uk.gov.ons.census.action.model.entity.FulfilmentToSend;
+import uk.gov.ons.census.action.model.entity.FulfilmentToProcess;
 import uk.gov.ons.census.action.model.repository.FulfilmentToSendRepository;
 
 @Service
@@ -217,18 +217,18 @@ public class FulfilmentRequestService {
 
   private void saveFulfilmentToSend(
       Case fulfilmentCase, ActionType actionType, FulfilmentRequestDTO fulfilmentRequest) {
-    FulfilmentToSend fulfilmentToSend = new FulfilmentToSend();
-    fulfilmentToSend.setCaze(fulfilmentCase);
-    fulfilmentToSend.setAddressLine1(fulfilmentCase.getAddressLine1());
-    fulfilmentToSend.setAddressLine2(fulfilmentCase.getAddressLine2());
-    fulfilmentToSend.setAddressLine3(fulfilmentCase.getAddressLine3());
-    fulfilmentToSend.setTownName(fulfilmentCase.getTownName());
-    fulfilmentToSend.setPostcode(fulfilmentCase.getPostcode());
-    fulfilmentToSend.setTitle(fulfilmentRequest.getContact().getTitle());
-    fulfilmentToSend.setForename(fulfilmentRequest.getContact().getForename());
-    fulfilmentToSend.setSurname(fulfilmentRequest.getContact().getSurname());
-    fulfilmentToSend.setFulfilmentCode(fulfilmentRequest.getFulfilmentCode());
-    fulfilmentToSend.setActionType(actionType);
-    fulfilmentToSendRepository.saveAndFlush(fulfilmentToSend);
+    FulfilmentToProcess fulfilmentToProcess = new FulfilmentToProcess();
+    fulfilmentToProcess.setCaze(fulfilmentCase);
+    fulfilmentToProcess.setAddressLine1(fulfilmentCase.getAddressLine1());
+    fulfilmentToProcess.setAddressLine2(fulfilmentCase.getAddressLine2());
+    fulfilmentToProcess.setAddressLine3(fulfilmentCase.getAddressLine3());
+    fulfilmentToProcess.setTownName(fulfilmentCase.getTownName());
+    fulfilmentToProcess.setPostcode(fulfilmentCase.getPostcode());
+    fulfilmentToProcess.setTitle(fulfilmentRequest.getContact().getTitle());
+    fulfilmentToProcess.setForename(fulfilmentRequest.getContact().getForename());
+    fulfilmentToProcess.setSurname(fulfilmentRequest.getContact().getSurname());
+    fulfilmentToProcess.setFulfilmentCode(fulfilmentRequest.getFulfilmentCode());
+    fulfilmentToProcess.setActionType(actionType);
+    fulfilmentToSendRepository.saveAndFlush(fulfilmentToProcess);
   }
 }
