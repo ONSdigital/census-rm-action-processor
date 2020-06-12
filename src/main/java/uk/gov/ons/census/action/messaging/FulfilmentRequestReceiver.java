@@ -1,7 +1,5 @@
 package uk.gov.ons.census.action.messaging;
 
-import com.godaddy.logging.Logger;
-import com.godaddy.logging.LoggerFactory;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
@@ -18,7 +16,6 @@ import uk.gov.ons.census.action.service.FulfilmentRequestService;
 
 @MessageEndpoint
 public class FulfilmentRequestReceiver {
-  private static final Logger log = LoggerFactory.getLogger(FulfilmentRequestReceiver.class);
   private static final Set<String> individualResponseRequestCodes =
       new HashSet<>(
           Arrays.asList(
