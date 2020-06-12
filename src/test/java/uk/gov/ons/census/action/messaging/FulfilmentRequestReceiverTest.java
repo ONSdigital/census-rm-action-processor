@@ -126,12 +126,9 @@ public class FulfilmentRequestReceiverTest {
 
     underTest.receiveEvent(event);
 
-    verifyZeroInteractions(fulfilmentRequestService);
-    verifyZeroInteractions(caseRepository);
-    // Then
+    verifyNoInteractions(fulfilmentRequestService);
+    verifyNoInteractions(caseRepository);
   }
-
-  //  find this test and put it back?
 
   private Case caseRepositoryReturnsRandomCase() {
     Case caze = easyRandom.nextObject(Case.class);
