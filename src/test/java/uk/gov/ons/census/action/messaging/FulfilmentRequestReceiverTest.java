@@ -43,7 +43,7 @@ public class FulfilmentRequestReceiverTest {
     // When
     underTest.receiveEvent(event);
 
-    verifyZeroInteractions(caseRepository);
+    verifyNoInteractions(caseRepository);
   }
 
   @Test
@@ -56,7 +56,7 @@ public class FulfilmentRequestReceiverTest {
     // When
     underTest.receiveEvent(event);
 
-    verifyZeroInteractions(caseRepository);
+    verifyNoInteractions(caseRepository);
   }
 
   @Test

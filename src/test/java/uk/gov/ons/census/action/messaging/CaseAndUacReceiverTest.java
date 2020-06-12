@@ -47,9 +47,9 @@ public class CaseAndUacReceiverTest {
     caseAndUacReceiver.receiveEvent(responseManagementEvent);
 
     // Then
-    verifyZeroInteractions(caseRepository);
-    verifyZeroInteractions(uacQidLinkRepository);
-    verifyZeroInteractions(fulfilmentRequestService);
+    verifyNoInteractions(caseRepository);
+    verifyNoInteractions(uacQidLinkRepository);
+    verifyNoInteractions(fulfilmentRequestService);
   }
 
   @Test
@@ -65,9 +65,9 @@ public class CaseAndUacReceiverTest {
     caseAndUacReceiver.receiveEvent(responseManagementEvent);
 
     // Then
-    verifyZeroInteractions(caseRepository);
-    verifyZeroInteractions(uacQidLinkRepository);
-    verifyZeroInteractions(fulfilmentRequestService);
+    verifyNoInteractions(caseRepository);
+    verifyNoInteractions(uacQidLinkRepository);
+    verifyNoInteractions(fulfilmentRequestService);
   }
 
   @Test
@@ -83,9 +83,9 @@ public class CaseAndUacReceiverTest {
     caseAndUacReceiver.receiveEvent(responseManagementEvent);
 
     // Then
-    verifyZeroInteractions(caseRepository);
-    verifyZeroInteractions(uacQidLinkRepository);
-    verifyZeroInteractions(fulfilmentRequestService);
+    verifyNoInteractions(caseRepository);
+    verifyNoInteractions(uacQidLinkRepository);
+    verifyNoInteractions(fulfilmentRequestService);
   }
 
   @Test

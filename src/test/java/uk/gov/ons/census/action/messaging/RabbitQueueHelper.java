@@ -1,7 +1,6 @@
 package uk.gov.ons.census.action.messaging;
 
 import org.springframework.amqp.core.AmqpAdmin;
-import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.retry.annotation.Backoff;
@@ -12,8 +11,6 @@ import org.springframework.stereotype.Component;
 @Component
 @EnableRetry
 public class RabbitQueueHelper {
-
-  @Autowired private ConnectionFactory connectionFactory;
 
   @Autowired private RabbitTemplate rabbitTemplate;
 

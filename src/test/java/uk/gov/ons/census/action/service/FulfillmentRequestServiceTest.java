@@ -11,7 +11,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import uk.gov.ons.census.action.model.dto.FulfilmentRequestDTO;
 import uk.gov.ons.census.action.model.entity.ActionType;
@@ -21,7 +20,6 @@ import uk.gov.ons.census.action.model.repository.FulfilmentToProcessRepository;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FulfillmentRequestServiceTest {
-  @Mock RabbitTemplate rabbitTemplate;
   @Mock FulfilmentToProcessRepository fulfilmentToProcessRepository;
 
   @InjectMocks FulfilmentRequestService underTest;
