@@ -142,7 +142,12 @@ public class CaseAndUacReceiver {
     caseDetails.setCeExpectedCapacity(collectionCase.getCeExpectedCapacity());
     caseDetails.setCeActualResponses(collectionCase.getCeActualResponses());
     caseDetails.setReceiptReceived(collectionCase.getReceiptReceived());
-    caseDetails.setRefusalReceived(RefusalType.valueOf(collectionCase.getRefusalReceived().name()));
+    if (collectionCase.getRefusalReceived() != null) {
+      caseDetails.setRefusalReceived(
+          RefusalType.valueOf(collectionCase.getRefusalReceived().name()));
+    } else {
+      caseDetails.setRefusalReceived(null);
+    }
     caseDetails.setAddressInvalid(collectionCase.getAddressInvalid());
     caseDetails.setHandDelivery(collectionCase.isHandDelivery());
     caseDetails.setMetadata(collectionCase.getMetadata());
