@@ -11,6 +11,7 @@ import uk.gov.ons.census.action.model.dto.ResponseManagementEvent;
 import uk.gov.ons.census.action.model.dto.Uac;
 import uk.gov.ons.census.action.model.entity.ActionType;
 import uk.gov.ons.census.action.model.entity.Case;
+import uk.gov.ons.census.action.model.entity.RefusalType;
 import uk.gov.ons.census.action.model.entity.UacQidLink;
 import uk.gov.ons.census.action.model.repository.CaseRepository;
 import uk.gov.ons.census.action.model.repository.UacQidLinkRepository;
@@ -141,7 +142,7 @@ public class CaseAndUacReceiver {
     caseDetails.setCeExpectedCapacity(collectionCase.getCeExpectedCapacity());
     caseDetails.setCeActualResponses(collectionCase.getCeActualResponses());
     caseDetails.setReceiptReceived(collectionCase.getReceiptReceived());
-    caseDetails.setRefusalReceived(collectionCase.getRefusalReceived());
+    caseDetails.setRefusalReceived(RefusalType.valueOf(collectionCase.getRefusalReceived().name()));
     caseDetails.setAddressInvalid(collectionCase.getAddressInvalid());
     caseDetails.setHandDelivery(collectionCase.isHandDelivery());
     caseDetails.setMetadata(collectionCase.getMetadata());
