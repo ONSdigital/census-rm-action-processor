@@ -227,6 +227,9 @@ public class FulfilmentRequestService {
     fulfilmentToProcess.setTitle(fulfilmentRequest.getContact().getTitle());
     fulfilmentToProcess.setForename(fulfilmentRequest.getContact().getForename());
     fulfilmentToProcess.setSurname(fulfilmentRequest.getContact().getSurname());
+    fulfilmentToProcess.setFieldCoordinatorId(fulfilmentCase.getFieldCoordinatorId());
+    fulfilmentToProcess.setFieldOfficerId(fulfilmentCase.getFieldOfficerId());
+    fulfilmentToProcess.setOrganisationName(fulfilmentCase.getOrganisationName());
     fulfilmentToProcess.setFulfilmentCode(fulfilmentRequest.getFulfilmentCode());
     fulfilmentToProcess.setActionType(actionType);
     fulfilmentToProcessRepository.saveAndFlush(fulfilmentToProcess);
