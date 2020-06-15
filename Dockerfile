@@ -8,6 +8,6 @@ RUN chmod +x /opt/healthcheck.sh
 
 RUN groupadd --gid 999 actionprocessor && \
     useradd --create-home --system --uid 999 --gid actionprocessor actionprocessor
-USER processor
+USER actionprocessor
 
 COPY target/$JAR_FILE /opt/census-rm-action-processor.jar
