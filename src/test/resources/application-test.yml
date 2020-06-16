@@ -4,6 +4,3 @@ spring:
 
   rabbitmq:
     port: 35672
-
-queueconfig:
-  events-exchange: events
