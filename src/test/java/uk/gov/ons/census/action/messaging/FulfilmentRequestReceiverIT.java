@@ -28,12 +28,10 @@ import uk.gov.ons.census.action.model.repository.FulfilmentToProcessRepository;
 public class FulfilmentRequestReceiverIT {
   private static final String EVENTS_FULFILMENT_REQUEST_BINDING = "event.fulfilment.request";
   private static final String PRINT_INDIVIDUAL_QUESTIONNAIRE_REQUEST_ENGLAND = "P_OR_I1";
+  private static final String EVENTS_EXCHANGE = "events";
 
   @Value("${queueconfig.action-fulfilment-inbound-queue}")
   private String actionFulfilmentQueue;
-
-  @Value("${queueconfig.events-exchange}")
-  private String eventsExchange;
 
   @Autowired private RabbitQueueHelper rabbitQueueHelper;
 
@@ -60,7 +58,7 @@ public class FulfilmentRequestReceiverIT {
 
     // When
     rabbitQueueHelper.sendMessage(
-        eventsExchange, EVENTS_FULFILMENT_REQUEST_BINDING, actionFulfilmentEvent);
+        EVENTS_EXCHANGE, EVENTS_FULFILMENT_REQUEST_BINDING, actionFulfilmentEvent);
     Thread.sleep(2000);
 
     List<FulfilmentToProcess> fulfilmentToProcess = fulfilmentToProcessRepository.findAll();
@@ -83,7 +81,7 @@ public class FulfilmentRequestReceiverIT {
     actionFulfilmentEvent.getPayload().getFulfilmentRequest().setIndividualCaseId(childCaseId);
 
     rabbitQueueHelper.sendMessage(
-        eventsExchange, EVENTS_FULFILMENT_REQUEST_BINDING, actionFulfilmentEvent);
+        EVENTS_EXCHANGE, EVENTS_FULFILMENT_REQUEST_BINDING, actionFulfilmentEvent);
 
     assertThat(fulfilmentToProcessRepository.findAll().size()).isEqualTo(0);
   }
