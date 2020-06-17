@@ -12,6 +12,9 @@ public class CollectionCase {
   private String collectionExerciseId;
   private Address address;
   private String actionableFrom;
+  private OffsetDateTime createdDateTime;
+  private OffsetDateTime lastUpdated;
+
   // Below this line is extra data potentially needed by Action Processor - can be ignored by RH
   private String actionPlanId;
   private String treatmentCode;
