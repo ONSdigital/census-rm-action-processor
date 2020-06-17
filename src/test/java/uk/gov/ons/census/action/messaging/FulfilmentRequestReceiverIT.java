@@ -45,7 +45,7 @@ public class FulfilmentRequestReceiverIT {
   @Transactional
   public void setUp() {
     rabbitQueueHelper.purgeQueue(actionFulfilmentQueue);
-    fulfilmentToProcessRepository.deleteAll();
+    fulfilmentToProcessRepository.deleteAllInBatch();
   }
 
   @Test
