@@ -3,6 +3,8 @@ package uk.gov.ons.census.action.model.dto;
 import lombok.Data;
 import uk.gov.ons.census.action.model.entity.CaseMetadata;
 
+import java.time.OffsetDateTime;
+
 @Data
 public class CollectionCase {
   private String id;
