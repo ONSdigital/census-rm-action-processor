@@ -1,0 +1,6 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:15666/postgres
+
+  rabbitmq:
+    port: 37672
