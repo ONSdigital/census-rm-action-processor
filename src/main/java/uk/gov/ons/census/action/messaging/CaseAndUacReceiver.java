@@ -118,6 +118,8 @@ public class CaseAndUacReceiver {
     caseDetails.setLongitude(collectionCase.getAddress().getLongitude());
     caseDetails.setUprn(collectionCase.getAddress().getUprn());
     caseDetails.setRegion(collectionCase.getAddress().getRegion());
+    caseDetails.setCreatedDateTime(collectionCase.getCreatedDateTime());
+    caseDetails.setLastUpdated(collectionCase.getLastUpdated());
     // Nope don't add new stuff here... look at the comment below...
 
     // Below this line is extra data potentially needed by Action Processor - can be ignored by RH
