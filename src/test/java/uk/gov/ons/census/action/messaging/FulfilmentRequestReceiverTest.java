@@ -9,7 +9,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.Value;
 import uk.gov.ons.census.action.model.dto.ResponseManagementEvent;
 import uk.gov.ons.census.action.model.entity.ActionType;
 import uk.gov.ons.census.action.model.entity.Case;
@@ -27,9 +26,6 @@ public class FulfilmentRequestReceiverTest {
   @Mock private FulfilmentRequestService fulfilmentRequestService;
 
   @InjectMocks FulfilmentRequestReceiver underTest;
-
-  @Value("${queueconfig.outbound-exchange}")
-  private String outboundExchange;
 
   private EasyRandom easyRandom = new EasyRandom();
 
@@ -70,9 +66,6 @@ public class FulfilmentRequestReceiverTest {
     when(fulfilmentRequestService.determineActionType("P_OR_H1")).thenReturn(ActionType.P_OR_HX);
 
     // When
-    when(fulfilmentRequestService.determineActionType("P_OR_H1")).thenReturn(ActionType.P_OR_HX);
-
-    // When
     underTest.receiveEvent(event);
 
     // Then
@@ -101,33 +94,60 @@ public class FulfilmentRequestReceiverTest {
   }
 
   @Test
-  public void testOnRequestIndividualQuestionnaireFulfilmentEngland() {
-    testIndividualResponseRequestIsIgnored(PRINT_INDIVIDUAL_QUESTIONNAIRE_REQUEST_ENGLAND);
-  }
-
-  @Test
-  public void testOnRequestIndividualQuestionnaireFulfilmentWalesEnglish() {
-    testIndividualResponseRequestIsIgnored(PRINT_INDIVIDUAL_QUESTIONNAIRE_REQUEST_WALES_ENGLISH);
-  }
-
-  @Test
-  public void testOnRequestIndividualQuestionnaireFulfilmentWalesWelsh() {
-    testIndividualResponseRequestIsIgnored(PRINT_INDIVIDUAL_QUESTIONNAIRE_REQUEST_WALES_WELSH);
-  }
-
-  @Test
-  public void testOnRequestIndividualQuestionnaireFulfilmentNorthernIreland() {
-    testIndividualResponseRequestIsIgnored(PRINT_INDIVIDUAL_QUESTIONNAIRE_REQUEST_NORTHERN_IRELAND);
-  }
-
-  private void testIndividualResponseRequestIsIgnored(String fulfilmentCode) {
+  public void testIndividualRequestIsNotIgnoredForCaseTypeSPG() {
+    // Given
+    Case fulfilmentCase = caseRepositoryReturnsRandomCase();
+    fulfilmentCase.setCaseType("SPG");
     ResponseManagementEvent event = easyRandom.nextObject(ResponseManagementEvent.class);
-    event.getPayload().getFulfilmentRequest().setFulfilmentCode(fulfilmentCode);
+    event.getPayload().getFulfilmentRequest().setFulfilmentCode("P_OR_I1");
+    event.getPayload().getFulfilmentRequest().setCaseId(fulfilmentCase.getCaseId());
 
+    when(fulfilmentRequestService.determineActionType("P_OR_I1")).thenReturn(ActionType.P_OR_HX);
+
+    // When
     underTest.receiveEvent(event);
 
-    verifyNoInteractions(fulfilmentRequestService);
-    verifyNoInteractions(caseRepository);
+    // Then
+    verify(fulfilmentRequestService, times(1))
+        .processEvent(
+            event.getPayload().getFulfilmentRequest(), fulfilmentCase, ActionType.P_OR_HX);
+  }
+
+  @Test
+  public void testOnRequestIndividualQuestionnaireFulfilmentEnglandCaseTypeHH() {
+    testIndividualResponseRequestIsIgnoredOnHHCase(PRINT_INDIVIDUAL_QUESTIONNAIRE_REQUEST_ENGLAND);
+  }
+
+  @Test
+  public void testOnRequestIndividualQuestionnaireFulfilmentWalesEnglishCaseTypeHH() {
+    testIndividualResponseRequestIsIgnoredOnHHCase(
+        PRINT_INDIVIDUAL_QUESTIONNAIRE_REQUEST_WALES_ENGLISH);
+  }
+
+  @Test
+  public void testOnRequestIndividualQuestionnaireFulfilmentWalesWelshCaseTypeHH() {
+    testIndividualResponseRequestIsIgnoredOnHHCase(
+        PRINT_INDIVIDUAL_QUESTIONNAIRE_REQUEST_WALES_WELSH);
+  }
+
+  @Test
+  public void testOnRequestIndividualQuestionnaireFulfilmentNorthernIrelandCaseTypeHH() {
+    testIndividualResponseRequestIsIgnoredOnHHCase(
+        PRINT_INDIVIDUAL_QUESTIONNAIRE_REQUEST_NORTHERN_IRELAND);
+  }
+
+  private void testIndividualResponseRequestIsIgnoredOnHHCase(String fulfilmentCode) {
+    ResponseManagementEvent event = easyRandom.nextObject(ResponseManagementEvent.class);
+    event.getPayload().getFulfilmentRequest().setFulfilmentCode(fulfilmentCode);
+    Case caze = new Case();
+    caze.setCaseType("HH");
+    when(caseRepository.findByCaseId(any())).thenReturn(Optional.of(caze));
+    when(fulfilmentRequestService.determineActionType(any())).thenReturn(ActionType.P_OR_HX);
+
+    underTest.receiveEvent(event);
+    verify(fulfilmentRequestService).determineActionType(fulfilmentCode);
+
+    verifyNoMoreInteractions(fulfilmentRequestService);
   }
 
   private Case caseRepositoryReturnsRandomCase() {

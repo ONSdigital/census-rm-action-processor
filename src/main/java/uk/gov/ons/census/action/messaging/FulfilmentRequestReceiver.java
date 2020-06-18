@@ -40,13 +40,6 @@ public class FulfilmentRequestReceiver {
   public void receiveEvent(ResponseManagementEvent event) {
     String fulfilmentCode = event.getPayload().getFulfilmentRequest().getFulfilmentCode();
 
-    if (individualResponseRequestCodes.contains(fulfilmentCode)) {
-      // We can't process this message until the case has been cloned from its parent case.
-      // We will receive an 'enriched' case creation message including the fulfilment details
-      // from Case Processor.
-      return;
-    }
-
     ActionType actionType = fulfilmentRequestService.determineActionType(fulfilmentCode);
     if (actionType == null) {
       return; // This is not a fulfilment that we need to process
@@ -54,6 +47,14 @@ public class FulfilmentRequestReceiver {
 
     Case fulfilmentCase =
         fetchFulfilmentCase(event.getPayload().getFulfilmentRequest().getCaseId());
+
+    if (fulfilmentCase.getCaseType().equals("HH")
+        && individualResponseRequestCodes.contains(fulfilmentCode)) {
+      // We can't process this message until the case has been cloned from its parent case.
+      // We will receive an 'enriched' case creation message including the fulfilment details
+      // from Case Processor.
+      return;
+    }
 
     fulfilmentRequestService.processEvent(
         event.getPayload().getFulfilmentRequest(), fulfilmentCase, actionType);
