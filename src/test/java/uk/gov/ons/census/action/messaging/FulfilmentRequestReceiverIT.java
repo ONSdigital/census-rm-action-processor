@@ -2,6 +2,7 @@ package uk.gov.ons.census.action.messaging;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 import org.jeasy.random.EasyRandom;
@@ -52,7 +53,7 @@ public class FulfilmentRequestReceiverIT {
   public void testQuestionnaireFulfilment() throws InterruptedException {
 
     // Given
-    Case fulfillmentCase = this.setUpCaseAndSaveInDB();
+    Case fulfillmentCase = setUpCaseAndSaveInDB();
     ResponseManagementEvent actionFulfilmentEvent =
         getResponseManagementEvent(fulfillmentCase.getCaseId(), "P_OR_H1");
 
@@ -110,7 +111,8 @@ public class FulfilmentRequestReceiverIT {
 
   private Case setUpCaseAndSaveInDB() {
     Case fulfilmentCase = easyRandom.nextObject(Case.class);
-    caseRepository.saveAndFlush(fulfilmentCase);
-    return fulfilmentCase;
+    fulfilmentCase.setCreatedDateTime(OffsetDateTime.now());
+    fulfilmentCase.setLastUpdated(OffsetDateTime.now());
+    return caseRepository.saveAndFlush(fulfilmentCase);
   }
 }

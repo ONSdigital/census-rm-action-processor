@@ -416,6 +416,8 @@ public class CaseAndUacReceiverTest {
     newCase.setMetadata(collectionCase.getMetadata());
     newCase.setSkeleton(collectionCase.isSkeleton());
     newCase.setPrintBatch(collectionCase.getPrintBatch());
+    newCase.setCreatedDateTime(collectionCase.getCreatedDateTime());
+    newCase.setLastUpdated(collectionCase.getLastUpdated());
     return newCase;
   }
 }
