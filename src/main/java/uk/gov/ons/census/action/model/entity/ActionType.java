@@ -26,11 +26,11 @@ public enum ActionType {
 
   // Individual addressed initial contact letters for CE Units
   CE_IC03_1(
-          ActionHandler.PRINTER,
-          "D_ICA_ICLR1"), // Individual ICL with UAC for England (Hand Delivery) Addressed
+      ActionHandler.PRINTER,
+      "D_ICA_ICLR1"), // Individual ICL with UAC for England (Hand Delivery) Addressed
   CE_IC04_1(
-          ActionHandler.PRINTER,
-          "D_ICA_ICLR2B"), // Individual ICL with UAC for Wales (Hand Delivery) Addressed
+      ActionHandler.PRINTER,
+      "D_ICA_ICLR2B"), // Individual ICL with UAC for Wales (Hand Delivery) Addressed
 
   // Initial contact letters for SPGs
   SPG_IC11(ActionHandler.PRINTER, "P_ICCE_ICL1"),
