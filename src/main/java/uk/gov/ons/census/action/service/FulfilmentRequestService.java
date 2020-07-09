@@ -100,6 +100,11 @@ public class FulfilmentRequestService {
       case "P_LP_HL2W":
       case "P_LP_HL4":
         return ActionType.P_LP_HLX;
+      case "P_LP_ILP1":
+      case "P_LP_ILP2":
+      case "P_LP_ILP2W":
+      case "P_LP_IL4":
+        return ActionType.P_LP_ILX;
       case "P_ER_ILER1":
       case "P_ER_ILER2B":
         return ActionType.P_ER_IL;

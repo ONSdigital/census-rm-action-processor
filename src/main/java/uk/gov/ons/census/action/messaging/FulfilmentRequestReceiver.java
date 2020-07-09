@@ -25,7 +25,11 @@ public class FulfilmentRequestReceiver {
               "P_OR_I4",
               "P_UAC_UACIP1",
               "P_UAC_UACIP2B",
-              "P_UAC_UACIP4"));
+              "P_UAC_UACIP4",
+              "P_LP_ILP1",
+              "P_LP_ILP2",
+              "P_LP_ILP2W",
+              "P_LP_IL4"));
   private final CaseRepository caseRepository;
   private final FulfilmentRequestService fulfilmentRequestService;
 

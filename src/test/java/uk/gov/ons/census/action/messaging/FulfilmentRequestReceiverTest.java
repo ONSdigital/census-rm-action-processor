@@ -21,6 +21,12 @@ public class FulfilmentRequestReceiverTest {
   private static final String PRINT_INDIVIDUAL_QUESTIONNAIRE_REQUEST_WALES_ENGLISH = "P_OR_I2";
   private static final String PRINT_INDIVIDUAL_QUESTIONNAIRE_REQUEST_WALES_WELSH = "P_OR_I2W";
   private static final String PRINT_INDIVIDUAL_QUESTIONNAIRE_REQUEST_NORTHERN_IRELAND = "P_OR_I4";
+  private static final String INDIVIDUAL_QUESTIONNAIRE_LARGE_PRINT_ENGLAND_LETTER = "P_LP_ILP1";
+  private static final String INDIVIDUAL_QUESTIONNAIRE_LARGE_PRINT_WALES_ENGLISH_LETTER =
+      "P_LP_ILP2";
+  private static final String INDIVIDUAL_QUESTIONNAIRE_LARGE_PRINT_WALES_WELSH_LETTER =
+      "P_LP_ILP2W";
+  private static final String INDIVIDUAL_QUESTIONNAIRE_LARGE_PRINT_NI_LETTER = "P_LP_IL4";
 
   @Mock private CaseRepository caseRepository;
   @Mock private FulfilmentRequestService fulfilmentRequestService;
@@ -136,6 +142,30 @@ public class FulfilmentRequestReceiverTest {
         PRINT_INDIVIDUAL_QUESTIONNAIRE_REQUEST_NORTHERN_IRELAND);
   }
 
+  @Test
+  public void testOnRequestIndividualLargePrintQuestionnaireFulfilmentEnglandCaseTypeHH() {
+    testIndividualResponseRequestLargePrintIsIgnoredOnHHCase(
+        INDIVIDUAL_QUESTIONNAIRE_LARGE_PRINT_ENGLAND_LETTER);
+  }
+
+  @Test
+  public void testOnRequestIndividualLargePrintQuestionnaireFulfilmentWalesEnglishCaseTypeHH() {
+    testIndividualResponseRequestLargePrintIsIgnoredOnHHCase(
+        INDIVIDUAL_QUESTIONNAIRE_LARGE_PRINT_WALES_ENGLISH_LETTER);
+  }
+
+  @Test
+  public void testOnRequestIndividualLargePrintQuestionnaireFulfilmentWalesWelshCaseTypeHH() {
+    testIndividualResponseRequestLargePrintIsIgnoredOnHHCase(
+        INDIVIDUAL_QUESTIONNAIRE_LARGE_PRINT_WALES_WELSH_LETTER);
+  }
+
+  @Test
+  public void testOnRequestIndividualLargePrintQuestionnaireFulfilmentNorthernIrelandCaseTypeHH() {
+    testIndividualResponseRequestLargePrintIsIgnoredOnHHCase(
+        INDIVIDUAL_QUESTIONNAIRE_LARGE_PRINT_NI_LETTER);
+  }
+
   private void testIndividualResponseRequestIsIgnoredOnHHCase(String fulfilmentCode) {
     ResponseManagementEvent event = easyRandom.nextObject(ResponseManagementEvent.class);
     event.getPayload().getFulfilmentRequest().setFulfilmentCode(fulfilmentCode);
@@ -143,6 +173,20 @@ public class FulfilmentRequestReceiverTest {
     caze.setCaseType("HH");
     when(caseRepository.findByCaseId(any())).thenReturn(Optional.of(caze));
     when(fulfilmentRequestService.determineActionType(any())).thenReturn(ActionType.P_OR_HX);
+
+    underTest.receiveEvent(event);
+    verify(fulfilmentRequestService).determineActionType(fulfilmentCode);
+
+    verifyNoMoreInteractions(fulfilmentRequestService);
+  }
+
+  private void testIndividualResponseRequestLargePrintIsIgnoredOnHHCase(String fulfilmentCode) {
+    ResponseManagementEvent event = easyRandom.nextObject(ResponseManagementEvent.class);
+    event.getPayload().getFulfilmentRequest().setFulfilmentCode(fulfilmentCode);
+    Case caze = new Case();
+    caze.setCaseType("HH");
+    when(caseRepository.findByCaseId(any())).thenReturn(Optional.of(caze));
+    when(fulfilmentRequestService.determineActionType(any())).thenReturn(ActionType.P_LP_ILX);
 
     underTest.receiveEvent(event);
     verify(fulfilmentRequestService).determineActionType(fulfilmentCode);
