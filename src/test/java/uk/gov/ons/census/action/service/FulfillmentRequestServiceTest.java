@@ -11,7 +11,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.Value;
 import uk.gov.ons.census.action.model.dto.FulfilmentRequestDTO;
 import uk.gov.ons.census.action.model.entity.ActionType;
 import uk.gov.ons.census.action.model.entity.Case;
@@ -24,17 +23,16 @@ public class FulfillmentRequestServiceTest {
 
   @InjectMocks FulfilmentRequestService underTest;
 
-  @Value("${queueconfig.outbound-exchange}")
-  private String outboundExchange;
-
-  @Value("${queueconfig.action-case-exchange}")
-  private String actionCaseExchange;
-
   private final EasyRandom easyRandom = new EasyRandom();
 
   @Test
-  public void testLargePrintQuestionnaireFulfilmentMappings() {
+  public void testLargePrintHouseholdQuestionnaireFulfilmentMappings() {
     assertThat(underTest.determineActionType("P_LP_HL1")).isEqualTo(ActionType.P_LP_HLX);
+  }
+
+  @Test
+  public void testLargePrintIndividualQuestionnaireFulfilmentMappings() {
+    assertThat(underTest.determineActionType("P_LP_ILP1")).isEqualTo(ActionType.P_LP_ILX);
   }
 
   @Test
