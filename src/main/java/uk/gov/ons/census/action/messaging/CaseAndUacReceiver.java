@@ -92,9 +92,9 @@ public class CaseAndUacReceiver {
   }
 
   private void processCaseUpdatedEvent(CollectionCase collectionCase) {
-    String caseId = collectionCase.getId();
+    UUID caseId = collectionCase.getId();
 
-    Optional<Case> cazeOpt = caseRepository.findByCaseId(UUID.fromString(caseId));
+    Optional<Case> cazeOpt = caseRepository.findByCaseId(caseId);
 
     if (cazeOpt.isEmpty()) {
       throw new RuntimeException(String.format(CASE_NOT_FOUND_ERROR, caseId));
@@ -107,7 +107,7 @@ public class CaseAndUacReceiver {
 
   private void setCaseDetails(CollectionCase collectionCase, Case caseDetails) {
     caseDetails.setCaseRef(Long.parseLong(collectionCase.getCaseRef()));
-    caseDetails.setCaseId(UUID.fromString(collectionCase.getId()));
+    caseDetails.setCaseId(collectionCase.getId());
     caseDetails.setCollectionExerciseId(collectionCase.getCollectionExerciseId());
     caseDetails.setAddressLine1(collectionCase.getAddress().getAddressLine1());
     caseDetails.setAddressLine2(collectionCase.getAddress().getAddressLine2());

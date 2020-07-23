@@ -262,9 +262,10 @@ public class CaseAndUacReceiverTest {
     Event event = new Event();
     event.setType(EventType.UAC_UPDATED);
     Uac uac = new Uac();
+    UUID test_case_id = UUID.randomUUID();
     uac.setQuestionnaireId("Test QID");
     uac.setUac("Test UAC");
-    uac.setCaseId("Test Case Id");
+    uac.setCaseId(test_case_id);
     uac.setActive(true);
     Payload payload = new Payload();
     payload.setUac(uac);
@@ -281,7 +282,7 @@ public class CaseAndUacReceiverTest {
     ArgumentCaptor<UacQidLink> uacQidLinkArgumentCaptor = ArgumentCaptor.forClass(UacQidLink.class);
     verify(uacQidLinkRepository).save(uacQidLinkArgumentCaptor.capture());
     UacQidLink actualUacQidLink = uacQidLinkArgumentCaptor.getValue();
-    assertEquals("Test Case Id", actualUacQidLink.getCaseId());
+    assertEquals(test_case_id, actualUacQidLink.getCaseId());
     assertEquals("Test QID", actualUacQidLink.getQid());
     assertEquals("Test UAC", actualUacQidLink.getUac());
     assertEquals(true, actualUacQidLink.isActive());
@@ -293,10 +294,12 @@ public class CaseAndUacReceiverTest {
     ResponseManagementEvent responseManagementEvent = new ResponseManagementEvent();
     Event event = new Event();
     event.setType(EventType.UAC_UPDATED);
+    UUID updated_test_case_id = UUID.randomUUID();
+    UUID test_case_id = UUID.randomUUID();
     Uac uac = new Uac();
     uac.setQuestionnaireId("Test QID");
     uac.setUac("Test UAC");
-    uac.setCaseId("Updated Test Case ID");
+    uac.setCaseId(updated_test_case_id);
     uac.setActive(false);
     Payload payload = new Payload();
     payload.setUac(uac);
@@ -306,7 +309,7 @@ public class CaseAndUacReceiverTest {
         new CaseAndUacReceiver(caseRepository, uacQidLinkRepository, fulfilmentRequestService);
     UacQidLink uacQidLink = new UacQidLink();
     uacQidLink.setActive(true);
-    uacQidLink.setCaseId("Change me");
+    uacQidLink.setCaseId(test_case_id);
     when(uacQidLinkRepository.findByQid(anyString())).thenReturn(Optional.of(uacQidLink));
 
     // When
@@ -317,7 +320,7 @@ public class CaseAndUacReceiverTest {
     ArgumentCaptor<UacQidLink> uacQidLinkArgumentCaptor = ArgumentCaptor.forClass(UacQidLink.class);
     verify(uacQidLinkRepository).save(uacQidLinkArgumentCaptor.capture());
     UacQidLink actualUacQidLink = uacQidLinkArgumentCaptor.getValue();
-    assertEquals("Updated Test Case ID", actualUacQidLink.getCaseId());
+    assertEquals(updated_test_case_id, actualUacQidLink.getCaseId());
     assertEquals(false, actualUacQidLink.isActive());
   }
 
@@ -347,10 +350,7 @@ public class CaseAndUacReceiverTest {
         easyRandom.nextObject(ResponseManagementEvent.class);
 
     responseManagementEvent.getPayload().getCollectionCase().setCaseRef("1234567890");
-    responseManagementEvent
-        .getPayload()
-        .getCollectionCase()
-        .setId("d09ac28e-d62f-4cdd-a5f9-e366e05f0fcd");
+    responseManagementEvent.getPayload().getCollectionCase().setId(UUID.randomUUID());
     responseManagementEvent.getPayload().getUac().setQuestionnaireId("123");
     responseManagementEvent.getPayload().getCollectionCase().setReceiptReceived(false);
     responseManagementEvent.getPayload().getCollectionCase().setRefusalReceived(null);
@@ -363,10 +363,7 @@ public class CaseAndUacReceiverTest {
         easyRandom.nextObject(ResponseManagementEvent.class);
 
     responseManagementEvent.getPayload().getCollectionCase().setCaseRef("123");
-    responseManagementEvent
-        .getPayload()
-        .getCollectionCase()
-        .setId("d09ac28e-d62f-4cdd-a5f9-e366e05f0fcd");
+    responseManagementEvent.getPayload().getCollectionCase().setId(UUID.randomUUID());
     responseManagementEvent.getPayload().getUac().setQuestionnaireId("123");
     responseManagementEvent.getPayload().getCollectionCase().setReceiptReceived(false);
     responseManagementEvent.getPayload().getCollectionCase().setRefusalReceived(null);
@@ -380,7 +377,7 @@ public class CaseAndUacReceiverTest {
   private Case getExpectedCase(CollectionCase collectionCase) {
     Case newCase = new Case();
     newCase.setCaseRef(Long.parseLong(collectionCase.getCaseRef()));
-    newCase.setCaseId(UUID.fromString(collectionCase.getId()));
+    newCase.setCaseId(collectionCase.getId());
     newCase.setCaseType(collectionCase.getCaseType());
     newCase.setActionPlanId(collectionCase.getActionPlanId());
     newCase.setCollectionExerciseId(collectionCase.getCollectionExerciseId());
