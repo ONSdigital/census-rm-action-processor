@@ -216,7 +216,13 @@ public class FulfilmentRequestService {
       case "P_UAC_UACIP1":
       case "P_UAC_UACIP2B":
       case "P_UAC_UACIP4":
+      case "P_UAC_UACIPA1":
+      case "P_UAC_UACIPA2B":
+      case "P_UAC_UACIPA4":
         return ActionType.P_UAC_IX;
+      case "P_UAC_UACCEP1":
+      case "P_UAC_UACCEP2B":
+        return ActionType.P_UAC_CX;
       default:
         log.with("fulfilmentCode", fulfilmentCode).warn("Unexpected fulfilment code received");
         return null;
