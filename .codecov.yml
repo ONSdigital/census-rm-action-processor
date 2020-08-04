@@ -3,7 +3,7 @@ coverage:
     project:
       default:
         target: 50%
-        threshold: null
+        threshold: 5%
         base: auto
 
 ignore:

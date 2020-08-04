@@ -35,7 +35,7 @@ queueconfig:
   inbound-queue: case.action
   action-fulfilment-inbound-queue: action.fulfilment
   consumers: 50
-  retry-delay: 1000 #milliseconds
+  retry-delay: 3000 #milliseconds
 
 healthcheck:
   frequency: 1000 #milliseconds
