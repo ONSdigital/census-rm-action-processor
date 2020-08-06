@@ -17,6 +17,7 @@ import org.springframework.integration.channel.DirectChannel;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.retry.backoff.FixedBackOffPolicy;
 import org.springframework.retry.interceptor.RetryOperationsInterceptor;
+import org.springframework.transaction.PlatformTransactionManager;
 import uk.gov.ons.census.action.client.ExceptionManagerClient;
 import uk.gov.ons.census.action.messaging.ManagedMessageRecoverer;
 import uk.gov.ons.census.action.model.dto.ResponseManagementEvent;
@@ -25,12 +26,16 @@ import uk.gov.ons.census.action.model.dto.ResponseManagementEvent;
 public class MessageConsumerConfig {
   private final ExceptionManagerClient exceptionManagerClient;
   private final ConnectionFactory connectionFactory;
+  private final PlatformTransactionManager transactionManager;
 
   @Value("${messagelogging.logstacktraces}")
   private boolean logStackTraces;
 
   @Value("${queueconfig.consumers}")
   private int consumers;
+
+  @Value("${queueconfig.retry-attempts}")
+  private int retryAttempts;
 
   @Value("${queueconfig.retry-delay}")
   private int retryDelay;
@@ -42,9 +47,12 @@ public class MessageConsumerConfig {
   private String actionFulfilmentQueue;
 
   public MessageConsumerConfig(
-      ExceptionManagerClient exceptionManagerClient, ConnectionFactory connectionFactory) {
+      ExceptionManagerClient exceptionManagerClient,
+      ConnectionFactory connectionFactory,
+      PlatformTransactionManager transactionManager) {
     this.exceptionManagerClient = exceptionManagerClient;
     this.connectionFactory = connectionFactory;
+    this.transactionManager = transactionManager;
   }
 
   @Bean
@@ -95,12 +103,9 @@ public class MessageConsumerConfig {
             "Action Processor",
             queueName);
 
-    // The retries don't seem to respect the transactions and we can end up with a messed up
-    // state involving Rabbit messages being emitted but DB changes not being committed.
-    // A single retry seems to work, but more than that is problematic.
     RetryOperationsInterceptor retryOperationsInterceptor =
         RetryInterceptorBuilder.stateless()
-            .maxAttempts(2) // DO NOT INCREASE TO MORE THAN 2 - NASTY SPRING BUG
+            .maxAttempts(retryAttempts)
             .backOffPolicy(fixedBackOffPolicy)
             .recoverer(managedMessageRecoverer)
             .build();
@@ -110,6 +115,7 @@ public class MessageConsumerConfig {
     container.setQueueNames(queueName);
     container.setConcurrentConsumers(consumers);
     container.setChannelTransacted(true);
+    container.setTransactionManager(transactionManager);
     container.setAdviceChain(retryOperationsInterceptor);
     return container;
   }
