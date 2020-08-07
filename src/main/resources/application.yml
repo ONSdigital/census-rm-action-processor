@@ -11,7 +11,7 @@ spring:
     driverClassName: org.postgresql.Driver
     initialization-mode: always
     hikari:
-      maximumPoolSize: 75  # We need a pool slightly bigger than the max concurrent threads
+      maximumPoolSize: 50
 
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQL94Dialect
