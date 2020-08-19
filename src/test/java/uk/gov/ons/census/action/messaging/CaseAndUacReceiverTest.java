@@ -17,9 +17,9 @@ import uk.gov.ons.census.action.model.dto.FulfilmentRequestDTO;
 import uk.gov.ons.census.action.model.dto.Payload;
 import uk.gov.ons.census.action.model.dto.ResponseManagementEvent;
 import uk.gov.ons.census.action.model.dto.Uac;
-import uk.gov.ons.census.action.model.entity.ActionType;
 import uk.gov.ons.census.action.model.entity.Case;
 import uk.gov.ons.census.action.model.entity.CaseMetadata;
+import uk.gov.ons.census.action.model.entity.FulfilmentType;
 import uk.gov.ons.census.action.model.entity.UacQidLink;
 import uk.gov.ons.census.action.model.repository.CaseRepository;
 import uk.gov.ons.census.action.model.repository.UacQidLinkRepository;
@@ -209,8 +209,8 @@ public class CaseAndUacReceiverTest {
     FulfilmentRequestDTO fulfilmentRequestDTO = easyRandom.nextObject(FulfilmentRequestDTO.class);
     fulfilmentRequestDTO.setFulfilmentCode(INDIVIDUAL_PRINT_QUESTIONNAIRE_CODE);
     responseManagementEvent.getPayload().setFulfilmentRequest(fulfilmentRequestDTO);
-    when(fulfilmentRequestService.determineActionType(INDIVIDUAL_PRINT_QUESTIONNAIRE_CODE))
-        .thenReturn(ActionType.P_OR_IX);
+    when(fulfilmentRequestService.determineFulfilmentType(INDIVIDUAL_PRINT_QUESTIONNAIRE_CODE))
+        .thenReturn(FulfilmentType.P_OR_IX);
 
     // when
     caseAndUacReceiver.receiveEvent(responseManagementEvent);
@@ -225,7 +225,7 @@ public class CaseAndUacReceiverTest {
 
     verify(fulfilmentRequestService, times(1))
         .processEvent(
-            eq(fulfilmentRequestDTO), caseArgumentCaptor.capture(), eq(ActionType.P_OR_IX));
+            eq(fulfilmentRequestDTO), caseArgumentCaptor.capture(), eq(FulfilmentType.P_OR_IX));
 
     assertThat(
         caseArgumentCaptor.getAllValues().get(0),

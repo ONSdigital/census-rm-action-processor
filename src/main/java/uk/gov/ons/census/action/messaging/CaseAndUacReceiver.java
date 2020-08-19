@@ -9,8 +9,8 @@ import uk.gov.ons.census.action.model.dto.CollectionCase;
 import uk.gov.ons.census.action.model.dto.EventType;
 import uk.gov.ons.census.action.model.dto.ResponseManagementEvent;
 import uk.gov.ons.census.action.model.dto.Uac;
-import uk.gov.ons.census.action.model.entity.ActionType;
 import uk.gov.ons.census.action.model.entity.Case;
+import uk.gov.ons.census.action.model.entity.FulfilmentType;
 import uk.gov.ons.census.action.model.entity.RefusalType;
 import uk.gov.ons.census.action.model.entity.UacQidLink;
 import uk.gov.ons.census.action.model.repository.CaseRepository;
@@ -50,12 +50,12 @@ public class CaseAndUacReceiver {
 
       // We can get sent a fulfilment request along with the case, which we need to process
       if (responseManagementEvent.getPayload().getFulfilmentRequest() != null) {
-        ActionType actionType =
-            fulfilmentRequestService.determineActionType(
+        FulfilmentType fulfilmentType =
+            fulfilmentRequestService.determineFulfilmentType(
                 responseManagementEvent.getPayload().getFulfilmentRequest().getFulfilmentCode());
 
         fulfilmentRequestService.processEvent(
-            responseManagementEvent.getPayload().getFulfilmentRequest(), caze, actionType);
+            responseManagementEvent.getPayload().getFulfilmentRequest(), caze, fulfilmentType);
       }
       return;
     }

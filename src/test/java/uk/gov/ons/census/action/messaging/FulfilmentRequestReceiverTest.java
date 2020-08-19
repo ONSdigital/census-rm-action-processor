@@ -10,8 +10,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.ons.census.action.model.dto.ResponseManagementEvent;
-import uk.gov.ons.census.action.model.entity.ActionType;
 import uk.gov.ons.census.action.model.entity.Case;
+import uk.gov.ons.census.action.model.entity.FulfilmentType;
 import uk.gov.ons.census.action.model.repository.CaseRepository;
 import uk.gov.ons.census.action.service.FulfilmentRequestService;
 
@@ -32,7 +32,7 @@ public class FulfilmentRequestReceiverTest {
   @Test
   public void testReceiveEventIgnoresUnexpectedFulfilmentCode() {
     // Given
-    when(fulfilmentRequestService.determineActionType(anyString())).thenReturn(null);
+    when(fulfilmentRequestService.determineFulfilmentType(anyString())).thenReturn(null);
     caseRepositoryReturnsRandomCase();
     ResponseManagementEvent event = easyRandom.nextObject(ResponseManagementEvent.class);
 
@@ -63,7 +63,8 @@ public class FulfilmentRequestReceiverTest {
     event.getPayload().getFulfilmentRequest().setFulfilmentCode("P_OR_H1");
     event.getPayload().getFulfilmentRequest().setCaseId(fulfilmentCase.getCaseId());
 
-    when(fulfilmentRequestService.determineActionType("P_OR_H1")).thenReturn(ActionType.P_OR_HX);
+    when(fulfilmentRequestService.determineFulfilmentType("P_OR_H1"))
+        .thenReturn(FulfilmentType.P_OR_HX);
 
     // When
     underTest.receiveEvent(event);
@@ -71,7 +72,7 @@ public class FulfilmentRequestReceiverTest {
     // Then
     verify(fulfilmentRequestService, times(1))
         .processEvent(
-            event.getPayload().getFulfilmentRequest(), fulfilmentCase, ActionType.P_OR_HX);
+            event.getPayload().getFulfilmentRequest(), fulfilmentCase, FulfilmentType.P_OR_HX);
   }
 
   @Test
@@ -82,7 +83,8 @@ public class FulfilmentRequestReceiverTest {
     event.getPayload().getFulfilmentRequest().setFulfilmentCode("P_OR_HC1");
     event.getPayload().getFulfilmentRequest().setCaseId(fulfilmentCase.getCaseId());
 
-    when(fulfilmentRequestService.determineActionType("P_OR_HC1")).thenReturn(ActionType.P_OR_HX);
+    when(fulfilmentRequestService.determineFulfilmentType("P_OR_HC1"))
+        .thenReturn(FulfilmentType.P_OR_HX);
 
     // When
     underTest.receiveEvent(event);
@@ -90,7 +92,7 @@ public class FulfilmentRequestReceiverTest {
     // Then
     verify(fulfilmentRequestService, times(1))
         .processEvent(
-            event.getPayload().getFulfilmentRequest(), fulfilmentCase, ActionType.P_OR_HX);
+            event.getPayload().getFulfilmentRequest(), fulfilmentCase, FulfilmentType.P_OR_HX);
   }
 
   @Test
@@ -102,7 +104,8 @@ public class FulfilmentRequestReceiverTest {
     event.getPayload().getFulfilmentRequest().setFulfilmentCode("P_OR_I1");
     event.getPayload().getFulfilmentRequest().setCaseId(fulfilmentCase.getCaseId());
 
-    when(fulfilmentRequestService.determineActionType("P_OR_I1")).thenReturn(ActionType.P_OR_HX);
+    when(fulfilmentRequestService.determineFulfilmentType("P_OR_I1"))
+        .thenReturn(FulfilmentType.P_OR_HX);
 
     // When
     underTest.receiveEvent(event);
@@ -110,7 +113,7 @@ public class FulfilmentRequestReceiverTest {
     // Then
     verify(fulfilmentRequestService, times(1))
         .processEvent(
-            event.getPayload().getFulfilmentRequest(), fulfilmentCase, ActionType.P_OR_HX);
+            event.getPayload().getFulfilmentRequest(), fulfilmentCase, FulfilmentType.P_OR_HX);
   }
 
   @Test
@@ -142,10 +145,11 @@ public class FulfilmentRequestReceiverTest {
     Case caze = new Case();
     caze.setCaseType("HH");
     when(caseRepository.findByCaseId(any())).thenReturn(Optional.of(caze));
-    when(fulfilmentRequestService.determineActionType(any())).thenReturn(ActionType.P_OR_HX);
+    when(fulfilmentRequestService.determineFulfilmentType(any()))
+        .thenReturn(FulfilmentType.P_OR_HX);
 
     underTest.receiveEvent(event);
-    verify(fulfilmentRequestService).determineActionType(fulfilmentCode);
+    verify(fulfilmentRequestService).determineFulfilmentType(fulfilmentCode);
 
     verifyNoMoreInteractions(fulfilmentRequestService);
   }

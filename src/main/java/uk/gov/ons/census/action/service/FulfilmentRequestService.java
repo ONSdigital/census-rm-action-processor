@@ -10,9 +10,9 @@ import java.util.Set;
 import org.springframework.stereotype.Service;
 import uk.gov.ons.census.action.messaging.FulfilmentRequestReceiver;
 import uk.gov.ons.census.action.model.dto.FulfilmentRequestDTO;
-import uk.gov.ons.census.action.model.entity.ActionType;
 import uk.gov.ons.census.action.model.entity.Case;
 import uk.gov.ons.census.action.model.entity.FulfilmentToProcess;
+import uk.gov.ons.census.action.model.entity.FulfilmentType;
 import uk.gov.ons.census.action.model.repository.FulfilmentToProcessRepository;
 
 @Service
@@ -39,9 +39,9 @@ public class FulfilmentRequestService {
   }
 
   public void processEvent(
-      FulfilmentRequestDTO fulfilmentRequest, Case caze, ActionType actionType) {
+      FulfilmentRequestDTO fulfilmentRequest, Case caze, FulfilmentType fulfilmentType) {
     checkMandatoryFields(fulfilmentRequest, caze);
-    saveFulfilmentToSend(caze, actionType, fulfilmentRequest);
+    saveFulfilmentToSend(caze, fulfilmentType, fulfilmentRequest);
   }
 
   private static void checkMandatoryFields(FulfilmentRequestDTO fulfilmentRequest, Case caze) {
@@ -78,7 +78,7 @@ public class FulfilmentRequestService {
     return paperQuestionnaireFulfilmentCodes.contains(fulfilmentRequest.getFulfilmentCode());
   }
 
-  public ActionType determineActionType(String fulfilmentCode) {
+  public FulfilmentType determineFulfilmentType(String fulfilmentCode) {
 
     // These are currently not added as Enums, as not known.
     switch (fulfilmentCode) {
@@ -90,24 +90,24 @@ public class FulfilmentRequestService {
       case "P_OR_HC2":
       case "P_OR_HC2W":
       case "P_OR_HC4":
-        return ActionType.P_OR_HX;
+        return FulfilmentType.P_OR_HX;
       case "P_UAC_UACHHP1":
       case "P_UAC_UACHHP2B":
       case "P_UAC_UACHHP4":
-        return ActionType.P_UAC_HX;
+        return FulfilmentType.P_UAC_HX;
       case "P_LP_HL1":
       case "P_LP_HL2":
       case "P_LP_HL2W":
       case "P_LP_HL4":
-        return ActionType.P_LP_HLX;
+        return FulfilmentType.P_LP_HLX;
       case "P_LP_ILP1":
       case "P_LP_ILP2":
       case "P_LP_ILP2W":
       case "P_LP_IL4":
-        return ActionType.P_LP_ILX;
+        return FulfilmentType.P_LP_ILX;
       case "P_ER_ILER1":
       case "P_ER_ILER2B":
-        return ActionType.P_ER_IL;
+        return FulfilmentType.P_ER_IL;
       case "P_TB_TBALB1":
       case "P_TB_TBAMH1":
       case "P_TB_TBARA1":
@@ -193,7 +193,7 @@ public class FulfilmentRequestService {
       case "P_TB_TBURD1":
       case "P_TB_TBVIE1":
       case "P_TB_TBYSH1":
-        return ActionType.P_TB_TBX;
+        return FulfilmentType.P_TB_TBX;
       case "UACHHT1":
       case "UACHHT2":
       case "UACHHT2W":
@@ -212,17 +212,17 @@ public class FulfilmentRequestService {
       case "P_OR_I2":
       case "P_OR_I2W":
       case "P_OR_I4":
-        return ActionType.P_OR_IX;
+        return FulfilmentType.P_OR_IX;
       case "P_UAC_UACIP1":
       case "P_UAC_UACIP2B":
       case "P_UAC_UACIP4":
       case "P_UAC_UACIPA1":
       case "P_UAC_UACIPA2B":
       case "P_UAC_UACIPA4":
-        return ActionType.P_UAC_IX;
+        return FulfilmentType.P_UAC_IX;
       case "P_UAC_UACCEP1":
       case "P_UAC_UACCEP2B":
-        return ActionType.P_UAC_CX;
+        return FulfilmentType.P_UAC_CX;
       default:
         log.with("fulfilmentCode", fulfilmentCode).warn("Unexpected fulfilment code received");
         return null;
@@ -230,7 +230,7 @@ public class FulfilmentRequestService {
   }
 
   private void saveFulfilmentToSend(
-      Case fulfilmentCase, ActionType actionType, FulfilmentRequestDTO fulfilmentRequest) {
+      Case fulfilmentCase, FulfilmentType fulfilmentType, FulfilmentRequestDTO fulfilmentRequest) {
     FulfilmentToProcess fulfilmentToProcess = new FulfilmentToProcess();
     fulfilmentToProcess.setCaze(fulfilmentCase);
     fulfilmentToProcess.setAddressLine1(fulfilmentCase.getAddressLine1());
@@ -245,7 +245,7 @@ public class FulfilmentRequestService {
     fulfilmentToProcess.setFieldOfficerId(fulfilmentCase.getFieldOfficerId());
     fulfilmentToProcess.setOrganisationName(fulfilmentCase.getOrganisationName());
     fulfilmentToProcess.setFulfilmentCode(fulfilmentRequest.getFulfilmentCode());
-    fulfilmentToProcess.setActionType(actionType);
+    fulfilmentToProcess.setFulfilmentType(fulfilmentType);
     fulfilmentToProcessRepository.saveAndFlush(fulfilmentToProcess);
   }
 }
