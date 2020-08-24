@@ -398,7 +398,7 @@ public class CaseAndUacReceiverTest {
     newCase.setHtcWillingness(collectionCase.getHtcWillingness());
     newCase.setHtcDigital(collectionCase.getHtcDigital());
     newCase.setAddressLevel(collectionCase.getAddress().getAddressLevel());
-    newCase.setAbpCode(collectionCase.getAddress().getApbCode());
+    newCase.setAbpCode(collectionCase.getAddress().getAbpCode());
     newCase.setAddressType(collectionCase.getAddress().getAddressType());
     newCase.setUprn(collectionCase.getAddress().getUprn());
     newCase.setEstabUprn(collectionCase.getAddress().getEstabUprn());
