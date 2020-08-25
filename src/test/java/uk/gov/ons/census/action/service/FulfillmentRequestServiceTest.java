@@ -12,9 +12,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.ons.census.action.model.dto.FulfilmentRequestDTO;
-import uk.gov.ons.census.action.model.entity.ActionType;
 import uk.gov.ons.census.action.model.entity.Case;
 import uk.gov.ons.census.action.model.entity.FulfilmentToProcess;
+import uk.gov.ons.census.action.model.entity.FulfilmentType;
 import uk.gov.ons.census.action.model.repository.FulfilmentToProcessRepository;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -27,27 +27,28 @@ public class FulfillmentRequestServiceTest {
 
   @Test
   public void testLargePrintHouseholdQuestionnaireFulfilmentMappings() {
-    assertThat(underTest.determineActionType("P_LP_HL1")).isEqualTo(ActionType.P_LP_HLX);
+    assertThat(underTest.determineFulfilmentType("P_LP_HL1")).isEqualTo(FulfilmentType.P_LP_HLX);
   }
 
   @Test
   public void testLargePrintIndividualQuestionnaireFulfilmentMappings() {
-    assertThat(underTest.determineActionType("P_LP_ILP1")).isEqualTo(ActionType.P_LP_ILX);
+    assertThat(underTest.determineFulfilmentType("P_LP_ILP1")).isEqualTo(FulfilmentType.P_LP_ILX);
   }
 
   @Test
   public void testTranslationBookletFulfilmentMappings() {
-    assertThat(underTest.determineActionType("P_TB_TBARA1")).isEqualTo(ActionType.P_TB_TBX);
+    assertThat(underTest.determineFulfilmentType("P_TB_TBARA1")).isEqualTo(FulfilmentType.P_TB_TBX);
   }
 
   @Test
   public void testInformationLeafletFulfilmentMappings() {
-    assertThat(underTest.determineActionType("P_ER_ILER1")).isEqualTo(ActionType.P_ER_IL);
+    assertThat(underTest.determineFulfilmentType("P_ER_ILER1")).isEqualTo(FulfilmentType.P_ER_IL);
   }
 
   @Test
   public void testHouseholdUniqueAccessCodesViaPaper() {
-    assertThat(underTest.determineActionType("P_UAC_UACHHP1")).isEqualTo(ActionType.P_UAC_HX);
+    assertThat(underTest.determineFulfilmentType("P_UAC_UACHHP1"))
+        .isEqualTo(FulfilmentType.P_UAC_HX);
   }
 
   @Test
@@ -56,7 +57,7 @@ public class FulfillmentRequestServiceTest {
     fulfilmentRequestDTO.setFulfilmentCode("P_OR_I1");
     Case caze = easyRandom.nextObject(Case.class);
 
-    underTest.processEvent(fulfilmentRequestDTO, caze, ActionType.P_OR_IX);
+    underTest.processEvent(fulfilmentRequestDTO, caze, FulfilmentType.P_OR_IX);
 
     ArgumentCaptor<FulfilmentToProcess> fulfilmentToSendArgumentCaptor =
         ArgumentCaptor.forClass(FulfilmentToProcess.class);
@@ -71,7 +72,7 @@ public class FulfillmentRequestServiceTest {
             fulfilmentRequestDTO.getContact(), "title", "forename", "surname");
     assertEquals(
         fulfilmentRequestDTO.getFulfilmentCode(), actualFulfilmentToProcess.getFulfilmentCode());
-    assertEquals(ActionType.P_OR_IX, actualFulfilmentToProcess.getActionType());
+    assertEquals(FulfilmentType.P_OR_IX, actualFulfilmentToProcess.getFulfilmentType());
   }
 
   @Test(expected = RuntimeException.class)
@@ -84,7 +85,7 @@ public class FulfillmentRequestServiceTest {
     caze.setFieldOfficerId(null);
 
     try {
-      underTest.processEvent(fulfilmentRequestDTO, caze, ActionType.P_TB_TBX);
+      underTest.processEvent(fulfilmentRequestDTO, caze, FulfilmentType.P_TB_TBX);
     } catch (RuntimeException runtimeException) {
       assertThat(runtimeException.getMessage()).contains("fieldOfficerId");
       assertThat(runtimeException.getMessage()).contains("fieldCoordinatorId");
@@ -103,7 +104,7 @@ public class FulfillmentRequestServiceTest {
     caze.setPostcode(null);
 
     try {
-      underTest.processEvent(fulfilmentRequestDTO, caze, ActionType.P_OR_HX);
+      underTest.processEvent(fulfilmentRequestDTO, caze, FulfilmentType.P_OR_HX);
     } catch (RuntimeException runtimeException) {
       assertThat(runtimeException.getMessage()).contains("addressLine1");
       assertThat(runtimeException.getMessage()).contains("postcode");

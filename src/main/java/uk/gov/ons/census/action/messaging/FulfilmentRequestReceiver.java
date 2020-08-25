@@ -9,8 +9,8 @@ import org.springframework.integration.annotation.MessageEndpoint;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.ons.census.action.model.dto.ResponseManagementEvent;
-import uk.gov.ons.census.action.model.entity.ActionType;
 import uk.gov.ons.census.action.model.entity.Case;
+import uk.gov.ons.census.action.model.entity.FulfilmentType;
 import uk.gov.ons.census.action.model.repository.CaseRepository;
 import uk.gov.ons.census.action.service.FulfilmentRequestService;
 
@@ -43,8 +43,9 @@ public class FulfilmentRequestReceiver {
   public void receiveEvent(ResponseManagementEvent event) {
     String fulfilmentCode = event.getPayload().getFulfilmentRequest().getFulfilmentCode();
 
-    ActionType actionType = fulfilmentRequestService.determineActionType(fulfilmentCode);
-    if (actionType == null) {
+    FulfilmentType fulfilmentType =
+        fulfilmentRequestService.determineFulfilmentType(fulfilmentCode);
+    if (fulfilmentType == null) {
       return; // This is not a fulfilment that we need to process
     }
 
@@ -60,7 +61,7 @@ public class FulfilmentRequestReceiver {
     }
 
     fulfilmentRequestService.processEvent(
-        event.getPayload().getFulfilmentRequest(), fulfilmentCase, actionType);
+        event.getPayload().getFulfilmentRequest(), fulfilmentCase, fulfilmentType);
   }
 
   private Case fetchFulfilmentCase(UUID caseId) {
