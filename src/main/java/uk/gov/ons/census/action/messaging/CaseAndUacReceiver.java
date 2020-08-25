@@ -126,7 +126,7 @@ public class CaseAndUacReceiver {
     caseDetails.setActionPlanId(collectionCase.getActionPlanId()); // This is essential
     caseDetails.setTreatmentCode(collectionCase.getTreatmentCode()); // This is essential
     caseDetails.setAddressLevel(collectionCase.getAddress().getAddressLevel());
-    caseDetails.setAbpCode(collectionCase.getAddress().getApbCode());
+    caseDetails.setAbpCode(collectionCase.getAddress().getAbpCode());
     caseDetails.setCaseType(collectionCase.getCaseType());
     caseDetails.setAddressType(collectionCase.getAddress().getAddressType());
     caseDetails.setUprn(collectionCase.getAddress().getUprn());
