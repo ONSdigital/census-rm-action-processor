@@ -205,6 +205,9 @@ public class FulfilmentRequestService {
       case "UACCET1":
       case "UACCET2":
       case "UACCET2W":
+      case "UACITA1":
+      case "UACITA2B":
+      case "UACITA4":
       case "RM_TC_HI":
       case "RM_TC":
         return null; // Ignore SMS and RM internal fulfilments
