@@ -100,9 +100,13 @@ public class CaseAndUacReceiver {
       throw new RuntimeException(String.format(CASE_NOT_FOUND_ERROR, caseId));
     }
 
-    Case updatedCase = cazeOpt.get();
-    setCaseDetails(collectionCase, updatedCase);
-    caseRepository.save(updatedCase);
+    Case caseToUpdate = cazeOpt.get();
+
+    // Make sure we throw away any updates which are older than the data we have already
+    if (collectionCase.getLastUpdated().isAfter(caseToUpdate.getLastUpdated())) {
+      setCaseDetails(collectionCase, caseToUpdate);
+      caseRepository.save(caseToUpdate);
+    }
   }
 
   private void setCaseDetails(CollectionCase collectionCase, Case caseDetails) {

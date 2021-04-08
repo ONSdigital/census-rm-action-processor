@@ -3,6 +3,7 @@ package uk.gov.ons.census.action.messaging;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+import java.time.OffsetDateTime;
 import java.util.Optional;
 import java.util.UUID;
 import org.assertj.core.api.Assertions;
@@ -169,6 +170,29 @@ public class CaseAndUacReceiverTest {
     Case actualCase = eventArgumentCaptor.getAllValues().get(0);
 
     assertThat(actualCase, SamePropertyValuesAs.samePropertyValuesAs(expectedCase));
+  }
+
+  @Test
+  public void testCaseNotUpdatedWithOldData() {
+    // given
+    CaseAndUacReceiver caseAndUacReceiver =
+        new CaseAndUacReceiver(caseRepository, uacQidLinkRepository, fulfilmentRequestService);
+    ResponseManagementEvent responseManagementEvent = getResponseManagementEvent();
+    responseManagementEvent.getEvent().setType(EventType.CASE_UPDATED);
+    responseManagementEvent
+        .getPayload()
+        .getCollectionCase()
+        .setLastUpdated(OffsetDateTime.now().minusMinutes(1));
+
+    Case expectedCase = easyRandom.nextObject(Case.class);
+    expectedCase.setLastUpdated(OffsetDateTime.now());
+    when(caseRepository.findByCaseId(any())).thenReturn(Optional.of(expectedCase));
+
+    // when
+    caseAndUacReceiver.receiveEvent(responseManagementEvent);
+
+    // then
+    verify(caseRepository, never()).save(any());
   }
 
   @Test
