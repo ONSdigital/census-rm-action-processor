@@ -1,5 +1,7 @@
 package uk.gov.ons.census.action.messaging;
 
+import com.godaddy.logging.Logger;
+import com.godaddy.logging.LoggerFactory;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.integration.annotation.MessageEndpoint;
@@ -20,6 +22,7 @@ import uk.gov.ons.census.action.utility.QuestionnaireTypeHelper;
 
 @MessageEndpoint
 public class CaseAndUacReceiver {
+  private static final Logger log = LoggerFactory.getLogger(CaseAndUacReceiver.class);
   private static final String CASE_NOT_FOUND_ERROR = "Failed to find case by case id '%s'";
 
   private final CaseRepository caseRepository;
@@ -102,10 +105,14 @@ public class CaseAndUacReceiver {
 
     Case caseToUpdate = cazeOpt.get();
 
-    // Make sure we throw away any updates which are older than the data we have already
     if (collectionCase.getLastUpdated().isAfter(caseToUpdate.getLastUpdated())) {
       setCaseDetails(collectionCase, caseToUpdate);
       caseRepository.save(caseToUpdate);
+    } else {
+      // Make sure we throw away any updates which are older than the data we have already
+      log.with("case_update", collectionCase)
+          .with("db_case", caseToUpdate)
+          .warn("Throwing away stale/old case update processed out of sequence");
     }
   }
 
